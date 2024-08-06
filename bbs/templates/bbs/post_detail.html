@@ -1,0 +1,46 @@
+{% extends 'bbs/base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="mt-5">
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card-title">
+            <h2>{{ post.title }}</h2>
+          </div>
+          <div class="card-text">
+            <span class="fs-6">{{ post.created_at | date:'Y-m-d' }}</span>
+            <p class="fs-6">{{ post.writer }}</p>
+            <div class="mt-5">{{ post.text }}</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="text-center">
+            <div class="image-container">
+              {% if post.image %}
+                <img src="{{ post.image.url }}" class="rounded" alt="画像の説明" style="max-width: 300px; height: auto;">
+              {% else %}
+                <p>No image available</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <a href="{% url 'bbs:post_delete' pk=object.pk %}" class="btn btn-danger">削除</a>
+
+  <form id="like-form" method="post" action="{% url 'bbs:like_post' %}" class="d-inline">
+    {% csrf_token %}
+    <input type="hidden" name="post_pk" value="{{ post.id }}">
+    <button type="submit" class="like-icon btn btn-link {% if user in post.likes.all %}liked{% endif %}">
+        <i class="bi bi-heart"></i>
+        <span id="like-count">{{ post.like_count }}</span>
+    </button>
+</form>
+
+</section>
+{% endblock %}

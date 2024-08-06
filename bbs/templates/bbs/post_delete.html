@@ -1,0 +1,50 @@
+{% extends 'bbs/base.html' %}
+
+{% block content %}
+<h5 class="modal-title" id="exampleModalLabel">タスクの削除</h5>
+<p>削除するともとに戻せません。よろしいですか？</p>
+
+<section class="mt-5">
+  <div class="card">
+    <div class="card-body">
+      <div class="card-title">
+        <h2>{{ post.title }}</h2>
+      </div>
+      <div class="card-text">
+        <span class="fs-6">{{ post.created_at | date:'Y-m-d' }}</span>
+        <div class="mt-5">
+          {{ post.text }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% for comment in post.comment_set.all %}
+  <div class="card mt-4">
+    <div class="card-body">
+      <div class="card-title">
+        <span class="fs-6">{{ comment.created_at | date:'Y-m-d' }}</span>
+        <p class="fs-6">{{ comment.writer }}</p>
+      </div>
+      <div class="card-text">
+        <div class="mt-4 mb-4">
+          {{ comment.text }}
+        </div>
+        <div class="card-footer">
+          <p>ここにコメントに対するいいね機能をいれる</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+  <!-- 削除フォームはループの外に移動 -->
+  <div class="modal-footer">
+    <form method='POST' action="{% url 'bbs:post_delete' post.pk %}">
+      {% csrf_token %}
+      <a href="{% url 'bbs:post_list' %}"  class="btn btn-secondary">キャンセル</a>
+      <button type="submit" class="btn btn-primary">削除</button>
+    </form>
+  </div>
+</section>
+{% endblock %}
